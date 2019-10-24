@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<head>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<style>
+		.task {
+			cursor: pointer;
+		}
+		.completed {
+			font-style: italic;
+			text-decoration: line-through;
+		}
+	</style>
+</head>
+<body>
+	<div id="root">
+		<input type="text" @keydown.enter="addTask" v-model="newTask">
+		<task-list v-bind:tasks="tasks"></task-list>
+	</div>
+
+	<script>
+		Vue.component('task', {
+			props: [ 'task' ],
+			template: `
+				<li class="task"
+					:class="{ completed: task.completed }"
+					@click="$emit('click')">
+					{{task.text}}
+				</li>`
+		});
+
+		Vue.component('task-list', {
+			props: [ 'tasks' ],
+			template: `
+				<ul>
+					<task v-for="task in tasks"
+						v-bind:task="task"
+						@click="task.completed = !task.completed">
+					</task>
+				</ul>`
+		});
+
+		const APP = new Vue({
+			el: '#root',
+			data: {
+				newTask: '',
+				tasks: [
+					{ text: 'Task 1', completed: false }
+				]
+			},
+			methods: {
+				addTask(task) {
+					this.tasks.push({
+						text: this.newTask,
+						completed: false
+					});
+					this.newTask = '';
+				}
+			}
+		});
+	</script>
+</body>
+</html>
