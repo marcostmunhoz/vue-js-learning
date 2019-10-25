@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 40px; 
+        }
+    </style>
+</head>
+<body>
+    <div id="root" class="container">
+        <button @click="showModal = true">Show Modal</button>
+        <modal :active="showModal" dismissable="true" @close="showModal = false">Hello World</modal>
+    </div>
+    <script>
+        Vue.component('modal', {
+            props: [ 'active', 'dismissable' ],
+            template: `
+                <div class="modal" :class="{ 'is-active': active }">
+                    <div class="modal-background"></div>
+                    <div class="modal-content">
+                        <div class="box">
+                            <slot></slot>
+                        </div>
+                    </div>
+                    <button v-if="dismissable" class="modal-close" @click="$emit('close')"></button>
+                </div>`
+        });
+
+		const APP = new Vue({
+			el: '#root',
+			data: {
+                showModal: true
+			}
+		});
+	</script>
+</body>
+</html>
