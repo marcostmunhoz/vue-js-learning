@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 40px; 
+        }
+    </style>
+</head>
+<body>
+    <div id="root" class="container">
+        <tabs @change="log">
+            <tab name="test" title="Teste 1" selected="true">
+                Olá, mundo!
+            </tab>
+            <tab name="test2" title="Teste 2">
+                Adeus, mundo!
+            </tab>
+        </tabs>
+    </div>
+    <script>
+        Vue.component('tabs', {
+            template: `
+                <div>
+                    <div class="tabs">
+                        <ul>
+                            <li v-for="tab in tabs" :class="{ 'is-active': tab.isActive }">
+                                <a :href="tab.anchor" @click="onChange(tab)">{{tab.title}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-details">
+                        <slot></slot>
+                    </div>
+                </div>`,
+            data() { 
+                return {
+                    tabs: [] 
+                }
+            },
+            created() {
+                this.tabs = this.$children;
+            },
+            methods: {
+                onChange(tab) {
+                    this.tabs.forEach((element) => {
+                        element.isActive = (element.anchor == tab.anchor);
+                    });
+                    this.$emit('change', tab);
+                }
+            }
+        });
+
+        Vue.component('tab', {
+            props: {
+                name: {
+                    type: String,
+                    required: true
+                },
+                selected: {
+                    default: false
+                },
+                title: {
+                    type: String,
+                    required: true
+                }
+            },
+            template: `
+                <div :id="name" v-show="isActive">
+                    <slot></slot>
+                </div>`,
+            computed: {
+                anchor() {
+                    return '#' + this.name;
+                }
+            },
+            data() {
+                return {
+                    isActive: false
+                }
+            },
+            mounted() {
+                this.isActive = this.selected;
+            }
+        });
+
+		const APP = new Vue({
+			el: '#root',
+            methods: {
+                log(data) {
+                    console.log(data);
+                }
+            }
+		});
+	</script>
+</body>
+</html>
