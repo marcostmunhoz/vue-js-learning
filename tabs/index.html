@@ -11,7 +11,7 @@
 </head>
 <body>
     <div id="root" class="container">
-        <tabs @change="log">
+        <tabs>
             <tab name="test" title="Teste 1" selected="true">
                 Olá, mundo!
             </tab>
@@ -21,6 +21,8 @@
         </tabs>
     </div>
     <script>
+        window.GlobalListener = new Vue();
+
         Vue.component('tabs', {
             template: `
                 <div>
@@ -48,7 +50,7 @@
                     this.tabs.forEach((element) => {
                         element.isActive = (element.anchor == tab.anchor);
                     });
-                    this.$emit('change', tab);
+                    GlobalListener.$emit('change', this, tab);
                 }
             }
         });
@@ -88,10 +90,8 @@
 
 		const APP = new Vue({
 			el: '#root',
-            methods: {
-                log(data) {
-                    console.log(data);
-                }
+            created() {
+                GlobalListener.$on('change', console.log);
             }
 		});
 	</script>
