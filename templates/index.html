@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 40px; 
+        }
+    </style>
+</head>
+<body>
+    <div id="root" class="container">
+        <button @click="showModal = true">Show Modal</button>
+        <modal :active="showModal" dismissable="true" @close="showModal = false">
+            <template slot="title">Modal Title</template>
+            Modal body goes here
+            <template slot="buttons">
+                <button class="button is-success">Success</button>
+                <button class="button">Dismiss</button> 
+            </template>
+        </modal>
+    </div>
+    <script>
+        Vue.component('modal', {
+            props: [ 'active', 'dismissable' ],
+            template: `
+                <div class="modal" :class="{ 'is-active': active }">
+                    <div class="modal-background"></div>
+                    <div class="modal-card">
+                        <header class="modal-card-head">
+                            <p class="modal-card-title">
+                                <slot name="title"></slot>
+                            </p>
+                            <button class="delete" aria-label="close"></button>
+                        </header>
+                        <section class="modal-card-body">
+                            <slot></slot>
+                        </section>
+                        <footer class="modal-card-foot">
+                            <slot name="buttons">
+                                <button class="button is-success">Ok</button>
+                            </slot>
+                        </footer>
+                    </div>
+                </div>`
+        });
+
+		const APP = new Vue({
+			el: '#root',
+			data: {
+                showModal: true
+			}
+		});
+	</script>
+</body>
+</html>
